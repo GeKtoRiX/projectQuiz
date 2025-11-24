@@ -1,17 +1,28 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import QUESTIONS from '@/data/questions.js';
 import quizCompleteImg from '@/assets/img/quiz-complete.png';
+import QuestionTimer from './QuestionTimer';
 
 export default function Quiz() {
   // Ответы пользователя.
   const [userAnswer, setUserAnswer] = useState([]);
+
   // Функция обработки ответа пользователя.
-  function handleSelectAnswer(selectedAnswer) {
+  const handleSelectAnswer = useCallback(function handleSelectAnswer(selectedAnswer) {
     // Добавление ответа пользователя в массив ответов.(Ренрендер).
     setUserAnswer((prevUserAnswers) => {
       return [...prevUserAnswers, selectedAnswer];
     });
-  }
+  }, []);
+
+  // Пропуск ответа пользователя - null
+  const handleSkipAnswer = useCallback(
+    () => handleSelectAnswer(null),
+    [handleSelectAnswer]
+  );
+
+  console.log(userAnswer);
+
   // Индекс текущего вопроса.
   const activeQuestionIndex = userAnswer.length;
   // Проверка окончания вопросов.
@@ -49,6 +60,11 @@ export default function Quiz() {
             );
           })}
         </ul>
+        <QuestionTimer
+          key={activeQuestionIndex}
+          timeout={3000}
+          onTimeout={handleSkipAnswer}
+        />
       </div>
     </div>
   );

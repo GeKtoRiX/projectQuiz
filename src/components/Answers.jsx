@@ -1,15 +1,13 @@
 import { useRef } from 'react';
 
 export default function Answers({
-  userAnswers,
+  lastUserAnswer,
   answerState,
   currentAnswers,
   handleSelectAnswer,
 }) {
   // Текущий массив перемешанных ответов(Не подвержен перерендеру).
   const shuffledAnswer = useRef();
-  // Последний(текущий) ответ пользователя на вопрос.
-  const lastUserAnswer = userAnswers[userAnswers.length - 1];
 
   // Первичный перемешанный массив ответов.
   if (!shuffledAnswer.current) {
@@ -19,7 +17,7 @@ export default function Answers({
   }
   return (
     <ul id='answers'>
-      {currentAnswers.map((answer) => {
+      {shuffledAnswer.current.map((answer) => {
         // Сверка ответа пользователя с вариантами ответа.
         const isSelected = lastUserAnswer === answer;
         let cssClass = '';
@@ -38,6 +36,7 @@ export default function Answers({
               onClick={() => {
                 handleSelectAnswer(answer);
               }}
+              disabled={answerState !== ''}
             >
               {answer}
             </button>

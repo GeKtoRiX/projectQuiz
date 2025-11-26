@@ -1,17 +1,17 @@
 import { useCallback, useState } from 'react';
 import QUESTIONS from '@/data/questions.js';
 import quizCompleteImg from '@/assets/img/quiz-complete.png';
-import QuestionTimer from './QuestionTimer';
+import Question from './Question';
 
 export default function Quiz() {
   // Цветовое выделение ответа пользователя.
   const [answerState, setAnswerState] = useState('');
   // Ответы пользователя.
-  const [userAnswer, setUserAnswer] = useState([]);
+  const [userAnswers, setUserAnswer] = useState([]);
 
   // Индекс текущего вопроса.
   const activeQuestionIndex =
-    answerState === '' ? userAnswer.length : userAnswer.length - 1;
+    answerState === '' ? userAnswers.length : userAnswers.length - 1;
 
   // Функция обработки ответа пользователя.
   const handleSelectAnswer = useCallback(
@@ -48,6 +48,7 @@ export default function Quiz() {
   );
 
   console.log(answerState);
+  console.log(userAnswers);
 
   // Проверка окончания вопросов.
   const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
@@ -62,47 +63,17 @@ export default function Quiz() {
     );
   }
 
-  // Перемешанный массив ответов текущего вопроса.
-  const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
-  shuffledAnswers.sort(() => Math.random() - 0.5);
-  // Последний(текущий) ответ пользователя на вопрос.
-  const lastUserAnswer = userAnswer[userAnswer.length - 1];
-
   return (
     <div id='quiz'>
-      <div id='question'>
-        <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
-        <ul id='answers'>
-          {shuffledAnswers.map((answer) => {
-            // Сверка ответа пользователя с вариантов ответа.
-            const isSelected = lastUserAnswer === answer;
-            let cssClass = '';
-            if (answerState === 'answered' && isSelected) {
-              cssClass = 'selected';
-            }
-            if ((answerState === 'correct' || answerState === 'wrong') && isSelected) {
-              cssClass = answerState;
-            }
-            return (
-              <li key={answer} className='answer'>
-                <button
-                  className={cssClass}
-                  onClick={() => {
-                    handleSelectAnswer(answer);
-                  }}
-                >
-                  {answer}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-        {/* <QuestionTimer
-          key={activeQuestionIndex}
-          timeout={3000}
-          onTimeout={handleSkipAnswer}
-        /> */}
-      </div>
+      <Question
+        key={activeQuestionIndex}
+        userAnswers={userAnswers}
+        answerState={answerState}
+        currentQuestionText={QUESTIONS[activeQuestionIndex].text}
+        currentAnswers={QUESTIONS[activeQuestionIndex].answers}
+        handleSelectAnswer={handleSelectAnswer}
+        handleSkipAnswer={handleSkipAnswer}
+      />
     </div>
   );
 }

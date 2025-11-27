@@ -11,7 +11,7 @@ export default function Question({ index, handleSelectAnswerMain, handleSkipAnsw
   });
 
   // Время таймера ответа.
-  let timer = 3000;
+  let timer = 1000;
 
   // Таймер рендера выделения ответа пользователя.
   if (answer.selectedAnswer) {

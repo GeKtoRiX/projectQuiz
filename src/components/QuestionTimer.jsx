@@ -7,7 +7,10 @@ export default function QuestionTimer({ timeout, onTimeout }) {
   // Ответ не выбран пользователем - переход к след. вопросу.
   useEffect(() => {
     const timer = setTimeout(() => {
-      onTimeout();
+      // Пользователь ответил на вопрос.
+      if (onTimeout) {
+        onTimeout();
+      }
     }, timeout);
     // Срабатывает при переиспользовании useEffect и при размонтировании.
     return () => {

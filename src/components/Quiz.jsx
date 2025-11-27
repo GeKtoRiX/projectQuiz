@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import QUESTIONS from '@/data/questions.js';
-import quizCompleteImg from '@/assets/img/quiz-complete.png';
 import Question from './Question.jsx';
+import Summary from './Summary.jsx';
 
 export default function Quiz() {
   // Ответы пользователя. []
@@ -28,12 +28,7 @@ export default function Quiz() {
 
   // Рендер компонента при окончании вопросов. false
   if (quizIsComplete) {
-    return (
-      <div id='summary'>
-        <img src={quizCompleteImg} alt='Trophy Icon' />
-        <h2>Quiz Completed</h2>
-      </div>
-    );
+    return <Summary userAnswers={userAnswers} />;
   }
 
   return (

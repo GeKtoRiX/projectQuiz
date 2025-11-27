@@ -1,16 +1,19 @@
 import { useCallback, useState } from 'react';
 import QUESTIONS from '@/data/questions.js';
 import quizCompleteImg from '@/assets/img/quiz-complete.png';
-import Question from './Question';
+import Question from './Question.jsx';
 
 export default function Quiz() {
-  // Ответы пользователя.
+  // Ответы пользователя. []
   const [userAnswers, setUserAnswer] = useState([]);
 
-  // Индекс текущего вопроса.
-  const activeQuestionIndex = userAnswers.length;
+  // Последний ответ пользователя в массиве(индекс). 0
+  const lastUserAnswer = userAnswers.length;
 
-  // Функция обработки ответа пользователя.
+  // Проверка окончания массива вопросов. false
+  const quizIsComplete = lastUserAnswer === QUESTIONS.length;
+
+  // Функция добавления ответа пользователя в массив.
   const handleSelectAnswer = useCallback(function handleSelectAnswer(selectedAnswer) {
     // Добавление ответа пользователя в массив ответов.(Ренрендер).
     setUserAnswer((prevUserAnswers) => {
@@ -20,16 +23,10 @@ export default function Quiz() {
 
   // Пропуск ответа пользователя - null
   const handleSkipAnswer = useCallback(() => {
-    console.log('Ответ отсутствует...');
     handleSelectAnswer(null);
   }, [handleSelectAnswer]);
 
-  console.log(userAnswers);
-
-  // Проверка окончания вопросов.
-  const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
-
-  // Рендер компонента при окончании вопросов.
+  // Рендер компонента при окончании вопросов. false
   if (quizIsComplete) {
     return (
       <div id='summary'>
@@ -42,8 +39,8 @@ export default function Quiz() {
   return (
     <div id='quiz'>
       <Question
-        key={activeQuestionIndex}
-        index={activeQuestionIndex}
+        key={lastUserAnswer}
+        index={lastUserAnswer}
         handleSelectAnswerMain={handleSelectAnswer}
         handleSkipAnswer={handleSkipAnswer}
       />

@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 
 export default function Answers({
-  lastUserAnswer,
+  userAnswer,
   answerState,
-  currentAnswers,
+  currentQuestionAnswers,
   handleSelectAnswer,
 }) {
   // Текущий массив перемешанных ответов(Не подвержен перерендеру).
@@ -12,19 +12,21 @@ export default function Answers({
   // Первичный перемешанный массив ответов.
   if (!shuffledAnswer.current) {
     // Перемешанный массив ответов текущего вопроса.
-    shuffledAnswer.current = [...currentAnswers];
+    shuffledAnswer.current = [...currentQuestionAnswers];
     shuffledAnswer.current.sort(() => Math.random() - 0.5);
   }
   return (
     <ul id='answers'>
       {shuffledAnswer.current.map((answer) => {
-        // Сверка ответа пользователя с вариантами ответа.
-        const isSelected = lastUserAnswer === answer;
+        // Проверка ответа пользователя с вариантами ответа.
+        const isSelected = userAnswer === answer;
         let cssClass = '';
+
         // Выделение выбранного ответа.
         if (answerState === 'answered' && isSelected) {
           cssClass = 'selected';
         }
+
         // Выделение правильного/неправильного ответа.
         if ((answerState === 'correct' || answerState === 'wrong') && isSelected) {
           cssClass = answerState;
